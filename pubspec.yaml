@@ -1,0 +1,25 @@
+name: flutter_desktop_tools
+description: Essential collection of tools for flutter desktop app development
+version: 0.0.1
+homepage: https://github.com/KRTirtho/flutter_desktop_tools
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  desktop_multi_window: ^0.2.0
+  flutter:
+    sdk: flutter
+  native_context_menu: ^0.2.2+5
+  shared_preferences: ^2.1.0
+  system_tray: ^2.0.2
+  titlebar_buttons: ^1.0.0
+  window_manager: ^0.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
