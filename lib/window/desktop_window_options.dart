@@ -28,6 +28,8 @@ class DesktopWindowOptions extends WindowOptions {
   /// The window will maintain an aspect ratio when resized.
   final double? aspectRatio;
 
+  final bool resizable;
+
   final double? opacity;
   final Offset? position;
   DesktopWindowOptions({
@@ -37,6 +39,7 @@ class DesktopWindowOptions extends WindowOptions {
     this.hideWindowFrame = false,
     this.showOnTaskbar = true,
     this.rememberWindowSize = true,
+    this.resizable = true,
     this.aspectRatio,
     this.opacity,
     this.position,

@@ -49,6 +49,7 @@ class DesktopTools with WidgetsBindingObserver {
   static SafePlatform get platform => SafePlatform();
 
   static Future<void> ensureInitialized([DesktopWindowOptions? options]) async {
+    if (!platform.isDesktop) return;
     options ??= DesktopWindowOptions();
     _preferences = await SharedPreferences.getInstance();
 
@@ -81,8 +82,9 @@ class DesktopTools with WidgetsBindingObserver {
             json.decode(_preferences.getString(_windowSizeKey) ?? "{}");
         final double? height = savedSize?["height"];
         final double? width = savedSize?["width"];
-
-        if (savedSize?["maximized"] == true) {
+        await windowManager.setResizable(options.resizable);
+        if (savedSize?["maximized"] == true &&
+            !(await windowManager.isMaximized())) {
           await windowManager.maximize();
         } else if (height != null && width != null) {
           await windowManager.setSize(Size(width, height));
@@ -94,7 +96,7 @@ class DesktopTools with WidgetsBindingObserver {
   }
 
   /// Windows requires using .ico so a different path is required
-  static Future<SystemTray> createSystemTrayMenu({
+  static Future<SystemTray?> createSystemTrayMenu({
     required String title,
     required String iconPath,
     required String windowsIconPath,
@@ -102,6 +104,7 @@ class DesktopTools with WidgetsBindingObserver {
     String? tooltip,
     FutureOr<void> Function(SystemTrayEvent event, SystemTray tray)? onEvent,
   }) async {
+    if (!platform.isDesktop) return null;
     final SystemTray systemTray = SystemTray();
     await systemTray.initSystemTray(
       title: title,
@@ -133,7 +136,10 @@ class DesktopTools with WidgetsBindingObserver {
     final windowSameDimension =
         _prevSize?.width == size.width && _prevSize?.height == size.height;
 
-    if (windowSameDimension) return;
+    if (windowSameDimension || _prevSize == null) {
+      _prevSize = size;
+      return;
+    }
     final isMaximized = await window.isMaximized();
     await _preferences.setString(
       _windowSizeKey,
