@@ -58,8 +58,10 @@ class DesktopTools with WidgetsBindingObserver {
 
     await window.ensureInitialized();
     await window.waitUntilReadyToShow(options, () async {
-      await window.setHasShadow(options!.hasShadow);
-      await window.setAlignment(options.alignment);
+      if (platform.isWindows || platform.isMacOS) {
+        await window.setHasShadow(options!.hasShadow);
+      }
+      await window.setAlignment(options!.alignment);
       await window.setSkipTaskbar(!options.showOnTaskbar);
       if (options.aspectRatio != null) {
         await window.setAspectRatio(options.aspectRatio!);
@@ -73,7 +75,7 @@ class DesktopTools with WidgetsBindingObserver {
       if (options.position != null) {
         await window.setPosition(options.position!);
       }
-      if (options.taskbarIcon != null) {
+      if (options.taskbarIcon != null && platform.isWindows) {
         await window.setIcon(options.taskbarIcon!);
       }
       if (options.hideWindowFrame) await window.setAsFrameless();
