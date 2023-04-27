@@ -3,8 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  desktop_multi_window
-  native_context_menu
+  local_notifier
   screen_retriever
   system_tray
   window_manager

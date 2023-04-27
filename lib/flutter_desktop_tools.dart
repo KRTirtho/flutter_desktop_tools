@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_desktop_tools/utils/platform.dart';
 import 'package:flutter_desktop_tools/window/desktop_window_options.dart';
+import 'package:local_notifier/local_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
@@ -55,6 +56,10 @@ class DesktopTools with WidgetsBindingObserver {
 
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.addObserver(DesktopTools());
+
+    if (options.title != null) {
+      await localNotifier.setup(appName: options.title!);
+    }
 
     await window.ensureInitialized();
     await window.waitUntilReadyToShow(options, () async {
@@ -124,6 +129,27 @@ class DesktopTools with WidgetsBindingObserver {
       );
     }
     return systemTray;
+  }
+
+  static LocalNotification? createNotification({
+    required String title,
+    required String message,
+    List<LocalNotificationAction>? actions,
+    String? identifier,
+    bool silent = false,
+    String? subtitle,
+  }) {
+    if (!platform.isDesktop) return null;
+    final notification = LocalNotification(
+      title: title,
+      body: message,
+      actions: actions,
+      identifier: identifier,
+      silent: silent,
+      subtitle: subtitle,
+    );
+
+    return notification;
   }
 
   static const _windowSizeKey = "window_size";
